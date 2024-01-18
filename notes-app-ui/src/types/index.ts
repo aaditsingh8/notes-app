@@ -1,4 +1,4 @@
 import Note from "./Note";
-import NotesState from "./NotesState";
+import GlobalState from "./GlobalState";
 
-export type { Note, NotesState };
+export type { Note, GlobalState };

@@ -1,11 +1,14 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Note, NotesState } from 'types';
+import { Note, GlobalState } from 'types';
+import { AppForm } from 'components';
 import './App.css';
 
-const NotesContext = React.createContext<NotesState>({
-  notes: [],
-  setNotes: () => {}
+export const GlobalContext = React.createContext<GlobalState>({
+  notesState: [ [], () => {} ],
+  titleState: [ "", () => {} ],
+  contentState: [ "", () => {} ],
+  selectedNoteState: [ null, () => {} ],
 });
 
 function App() {
@@ -15,6 +18,13 @@ function App() {
   const [content, setContent] = useState("");
 
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+
+  const globalContextValue: GlobalState = {
+    notesState: [ notes, setNotes ],
+    titleState: [ title, setTitle ],
+    contentState: [ content, setContent ],
+    selectedNoteState: [ selectedNote, setSelectedNote ]
+  };
 
   // populate notes on landing
   useEffect(() => {
@@ -31,84 +41,10 @@ function App() {
     fetchNotes();
   }, []);
 
-  
-  const handleAddNoteButton = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    try {
-      const response = await fetch(
-        "http://localhost:6001/api/notes/add",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            title,
-            content
-          })
-        }
-      );
-      const responseObj = await response.json();
-      const newNote: Note = responseObj.note;
-
-      setNotes([newNote, ...notes]);  // add note to the beginning
-      setTitle("");                   // reset title input box
-      setContent("");                 // reset content input box
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
   const handleNoteSelection = (note: Note) => {
     setSelectedNote(note);
     setTitle(note.title);
     setContent(note.content);
-  };
-
-  const handleUpdateNote = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    if (!selectedNote) {
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        `http://localhost:6001/api/notes/update/${selectedNote.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            title,
-            content
-          })
-        }
-      );
-      const responseObj = await response.json();
-      const updatedNote: Note = responseObj.note;
-
-      const updatedNotesList = notes.map((note) =>
-        note.id === selectedNote.id
-          ? updatedNote
-          : note
-      );
-      
-      setNotes(updatedNotesList);
-      setTitle("");
-      setContent("");
-      setSelectedNote(null);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const handleCancelNote = () => {
-    setTitle("");
-    setContent("");
-    setSelectedNote(null);
   };
 
   const handleDeleteNote = async (
@@ -138,37 +74,8 @@ function App() {
 
   return (
     <div className="app-container">
-      <NotesContext.Provider value={{ notes: notes, setNotes: setNotes }} >
-        <form
-          className="note-form"
-          onSubmit={(event) =>
-            selectedNote
-              ? handleUpdateNote(event)
-              : handleAddNoteButton(event)
-          }
-        >
-          <input
-            placeholder="Title"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            required
-          />
-          <textarea
-            placeholder="Content"
-            value={content}
-            onChange={(event) => setContent(event.target.value)}
-            rows={10}
-            required
-          />
-          {selectedNote ? (
-            <div className="edit-buttons">
-              <button type="submit">Save</button>
-              <button onClick={handleCancelNote}>Cancel</button>
-            </div>
-          ) : (
-            <button type="submit">Add Note</button>
-          )}
-        </form>
+      <GlobalContext.Provider value={globalContextValue} >
+        <AppForm />
         <div className="notes-grid">
           {notes.map((note) => (
             <div
@@ -187,7 +94,7 @@ function App() {
             </div>
           ))}
         </div>
-      </NotesContext.Provider>
+      </GlobalContext.Provider>
     </div>
   );
 }
