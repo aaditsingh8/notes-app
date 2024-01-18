@@ -5,10 +5,10 @@ import { AppForm } from 'components';
 import './App.css';
 
 export const GlobalContext = React.createContext<GlobalState>({
-  notesState: [ [], () => {} ],
-  titleState: [ "", () => {} ],
-  contentState: [ "", () => {} ],
-  selectedNoteState: [ null, () => {} ],
+  notesState: [[], () => { }],
+  titleState: ["", () => { }],
+  contentState: ["", () => { }],
+  selectedNoteState: [null, () => { }],
 });
 
 function App() {
@@ -20,10 +20,10 @@ function App() {
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
 
   const globalContextValue: GlobalState = {
-    notesState: [ notes, setNotes ],
-    titleState: [ title, setTitle ],
-    contentState: [ content, setContent ],
-    selectedNoteState: [ selectedNote, setSelectedNote ]
+    notesState: [notes, setNotes],
+    titleState: [title, setTitle],
+    contentState: [content, setContent],
+    selectedNoteState: [selectedNote, setSelectedNote]
   };
 
   // populate notes on landing
@@ -64,7 +64,7 @@ function App() {
       const filteredNotesList = notes.filter(
         (note) => note.id !== notedId
       );
-  
+
       setNotes(filteredNotesList);
     } catch (e) {
       console.log(e);

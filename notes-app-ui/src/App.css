@@ -49,54 +49,6 @@ body {
   max-width: fit-content;
 }
 
-/* Add Note Form */
-
 h2 {
   margin: 0;
-}
-
-.note-form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-bottom: 20px;
-}
-
-textarea,
-input {
-  border-radius: 5px;
-  border: 1px solid black;
-  padding: 10px;
-  font-size: 16px;
-}
-
-.note-form button {
-  border-radius: 5px;
-  background-color: rgb(64, 154, 184);
-  border: none;
-  padding: 10px;
-  font-size: 16px;
-  color: white;
-}
-
-.note-form button:hover {
-  background-color: rgb(106, 175, 198);
-  cursor: pointer;
-}
-
-/* Edit Note Form */
-
-.edit-buttons {
-  display: flex;
-  justify-content: space-evenly;
-  gap: 5px;
-}
-
-.edit-buttons button {
-  flex: 1;
-}
-
-.edit-buttons button:last-of-type {
-  background-color: rgb(220, 89, 89);
-  color: white;
 }

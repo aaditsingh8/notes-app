@@ -1,6 +1,7 @@
 import React from "react";
 import { GlobalContext } from "App";
 import { Note } from "types";
+import './styles.css'
 
 function AppForm() {
     const { notesState, titleState, contentState, selectedNoteState } = React.useContext(GlobalContext)
