@@ -10,6 +10,8 @@ function AppForm() {
     const [content, setContent] = contentState;
     const [selectedNote, setSelectedNote] = selectedNoteState;
 
+    /* Form submission */
+
     const handleAddNoteButton = async (event: React.FormEvent) => {
         event.preventDefault();
 
@@ -77,6 +79,14 @@ function AppForm() {
         }
     };
 
+    const handleSubmit = (event: React.FormEvent) => {
+        return selectedNote
+            ? handleUpdateNote(event)
+            : handleAddNoteButton(event);
+    }
+
+    /* Form cancellation */
+
     const handleCancelNote = () => {
         setTitle("");
         setContent("");
@@ -86,11 +96,7 @@ function AppForm() {
     return (
         <form
             className="note-form"
-            onSubmit={(event) =>
-                selectedNote
-                    ? handleUpdateNote(event)
-                    : handleAddNoteButton(event)
-            }
+            onSubmit={handleSubmit}
         >
             <input
                 placeholder="Title"
